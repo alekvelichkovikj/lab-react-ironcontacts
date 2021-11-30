@@ -8,8 +8,12 @@ function App() {
   // Add Random
   const random = () => {
     const newArr = [...contacts]
+    const randomContact =
+      contactsArr[Math.floor(Math.random() * contactsArr.length)]
 
-    newArr.push(contactsArr[Math.floor(Math.random() * contactsArr.length)])
+    if (newArr.includes(randomContact) === false) {
+      newArr.push(randomContact)
+    }
     setContacts(newArr)
   }
 
@@ -29,8 +33,8 @@ function App() {
     setContacts(newArr)
   }
 
-  // Sort by category
-  const sortByCategory = () => {
+  // Sort by Popularity
+  const sortByPopularity = () => {
     const newArr = [...contacts]
 
     newArr.sort((a, b) => b.popularity - a.popularity)
@@ -43,32 +47,36 @@ function App() {
     setContacts(contactsFilter)
   }
 
+  // Table
+  const contactsTable = contacts.map((contact) => (
+    <tr key={contact.id}>
+      <td>
+        <img src={contact.pictureUrl} alt='' height='100px' />
+      </td>
+      <td> {contact.name} </td>
+      <td> {Math.round(contact.popularity)}</td>
+      <td> {contact.wonOscar ? ' 🏆 ' : ' 🏴‍☠️ '} </td>
+      <td> {contact.wonEmmy ? ' 🏆 ' : ' 🏴‍☠️ '} </td>
+      <td>
+        <button
+          onClick={() => {
+            deleteContact(contact.id)
+          }}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))
+
   return (
     <div className='App'>
       <header className='App-header'>
         <div>
           <h1>Iron Contacts </h1>
-          <button
-            onClick={() => {
-              random()
-            }}
-          >
-            Add Random Contact
-          </button>
-          <button
-            onClick={() => {
-              sortByName()
-            }}
-          >
-            Sort By Name
-          </button>
-          <button
-            onClick={() => {
-              sortByCategory()
-            }}
-          >
-            Sort By Popularity
-          </button>
+          <button onClick={random}>Add Random Contact</button>
+          <button onClick={sortByName}>Sort By Name</button>
+          <button onClick={sortByPopularity}>Sort By Popularity</button>
         </div>
 
         <div>
@@ -81,26 +89,7 @@ function App() {
               <th>Emy</th>
               <th>❌</th>
             </tr>
-            {contacts.map((contact) => (
-              <tr>
-                <td>
-                  <img src={contact.pictureUrl} alt='' height='100px' />
-                </td>
-                <td> {contact.name} </td>
-                <td> {Math.round(contact.popularity)}</td>
-                <td> {contact.wonOscar ? ' 🏆 ' : ' 🏴‍☠️ '} </td>
-                <td> {contact.wonEmmy ? ' 🏆 ' : ' 🏴‍☠️ '} </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      deleteContact(contact.id)
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {contactsTable}
           </table>
         </div>
       </header>
